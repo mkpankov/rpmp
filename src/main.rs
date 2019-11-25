@@ -1,13 +1,25 @@
+use librpm::{Db, Index};
+
+use std::path::Path;
+
+const PACKAGE_NAME: &str = "rpm-devel";
+const PACKAGE_SUMMARY: &str = "Development files for manipulating RPM packages";
+const PACKAGE_LICENSE: &str = "GPLv2+ and LGPLv2+ with exceptions";
+
 fn main() {
-    use librpm::Index;
+    let db = Db::open::<&Path>().unwrap();
+    let mut matches = Index::Name.find(&db, PACKAGE_NAME);
 
-    librpm::config::read_file(None).unwrap();
-
-    let mut matches = Index::Name.find("rpm-devel");
-    let package = matches.next();
-    println!("{:?}", if package.is_some() {
-        true
+    if let Some(package) = matches.next() {
+        assert_eq!(package.name, PACKAGE_NAME);
+        assert_eq!(package.summary, PACKAGE_SUMMARY);
+        assert_eq!(package.license.as_str(), PACKAGE_LICENSE);
+        assert!(matches.next().is_none(), "expected one result, got more!");
     } else {
-        false
-    });
+        if librpm::db::installed_packages().count() == 0 {
+            eprintln!("*** warning: No RPMs installed! Tests skipped!")
+        } else {
+            panic!("some RPMs installed, but not `rpm-devel`?!");
+        }
+    }
 }

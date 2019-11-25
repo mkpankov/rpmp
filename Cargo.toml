@@ -7,5 +7,5 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# librpm = { git = "https://github.com/whamcloud/librpm.rs.git", branch = "iml" }
-librpm = { git = "https://github.com/RustRPM/librpm.rs.git", branch = "master" }
+librpm = { git = "https://github.com/whamcloud/librpm.rs.git", branch = "rewrite" }
+# librpm = { git = "https://github.com/RustRPM/librpm.rs.git", branch = "master" }
